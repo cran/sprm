@@ -1,0 +1,6 @@
+export(sprms, prms, predict.sprm, predict.prm, plot.sprm, plot.prm, biplot.sprm, biplot.prm, sprmsCV, prmsCV, summary.sprm, summary.prm, print.sprm, print.prm)
+import(ggplot2, grid)
+importFrom(cvTools, cvFolds)
+importFrom(reshape2, melt)
+importFrom(pcaPP, qn)
+importFrom(pcaPP, l1median)
