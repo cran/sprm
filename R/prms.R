@@ -40,15 +40,20 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
   if(is.data.frame(data) | is.list(data)){
     mt <- terms(formula, data=data)
     yname <- dimnames(attr(mt,"factors"))[[1]][1]
+	if(is.list(data)){
+		datnames <- names(data)
+	} else {
+		datnames <- colnames(data)
+	}
     ic <- attr(mt, "intercept")
     if (ic==0){
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)], model.matrix(mt, data))},
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]], model.matrix(mt, data))},
                        error=function(err){
                          error <- TRUE
                          return(error)
                        }) 
     } else{
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)],model.matrix(mt, data)[,-1])},
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]],model.matrix(mt, data)[,-1])},
                        error=function(err){
                          error <- TRUE
                          return(error)
@@ -124,7 +129,6 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
   wx <- sqrt(apply(datamc[,2:qs]^2, 1, sum))
   wx <- wx/median(wx)
   wy <- abs(datamc[,1])
-  probct <- qnorm(probp1)
   ###PF start modify### 
   ### wy <- wy/(1.4826*median(wy))
   if (length(wy)/2>sum(wy==0)){ # not too many zeros
@@ -137,6 +141,7 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
     wx <- 1/(1 + abs(wx/(probct*2)))
     wy <- 1/(1 + abs(wy/(probct*2)))
   }
+  probct <- qnorm(probp1)
   if(fun =="Huber") {
     wx[which(wx <= probct)] <- 1
     wx[which(wx > probct)] <- probct/abs(wx[which(wx > probct)])
@@ -158,16 +163,9 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
   
   w <- wx * wy
   if(any(w<1e-6)){
-    ### PF modify start
     w0 <- which(w<1e-6)
     w <- replace(w,list=w0,values=1e-6)
     we <- w
-    ###datamc <- datamc[-w0,]
-    ### wxe <- wx[-w0]
-    ### wye <- wy[-w0]
-    ### we <- w[-w0]
-    ### zerows <- as.numeric(names(w0))
-    ### PF modify end
   } else {
     wxe <- wx
     wye <- wy
@@ -177,33 +175,17 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
   loops <- 1
   rold <- 10^-5
   difference <- 1
-  while ((difference > prec) && loops < numit) {
-    res <- tryCatch({     
-      spls <- nipls(formula,data=dataw,a=a)
-    }, error=function(err){
-      error <- TRUE
-      return(error)
-    })  
-    if (is.logical(res)){
-      break
-    } else{
-      spls <- res
-    }
-    yp <- fitted(spls)
+  while ((difference > prec) && loops < numit) {    
+    res.nipls <- nipls(data=dataw,a=a)
+    yp <- fitted(res.nipls)
     r <- datamc[,1] - yp
-    rc <- r - median(r)
-    b <- coef(spls)
-    Tpls <- spls$scores/sqrt(we)
-#    Yev <- (sum(yp^2)/sum(datamc[,1]^2))*100 # ????
-    
-    ###PF start modify### 
-    ###r <- abs(rc)/(1.4826*median(abs(rc))) 
-    if (length(rc)/2>sum(rc==0)){ # not too many zeros
-      r <- abs(rc)/(1.4826*median(abs(rc))) 
+    b <- coef(res.nipls)
+    Tpls <- res.nipls$scores/sqrt(we)
+        if (length(r)/2>sum(r==0)){ 
+      r <- abs(r)/(1.4826*median(abs(r))) 
     } else{
-      r <- abs(rc)/(1.4826*median(abs(rc[rc!=0])))
+      r <- abs(r)/(1.4826*median(abs(r[r!=0])))
     }
-    ###PF end modify### 
 
     scalet = scale
     if(scale=="no"){scalet="qn"}
@@ -250,19 +232,13 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
     difference <- abs(sum(b^2) - rold)/rold
     rold <- sum(b^2)
     we <- wye * wte
-    ### PF modify start
     if(any(we<1e-6)){
       w0 <- which(we<1e-6)
       we <- replace(we,list=w0,values=1e-6)
-      ###  datamc <- datamc[-w0,]
-      ### wte <- wte[-w0]
-      ###  wye <- wye[-w0]
-      ###  we <- we[-w0]
-      ###  zerows <- unique(c(zerows,as.numeric(names(w0))))
+	  zerows <- unique(c(zerows,as.numeric(names(w0))))
     }
-    ### PF modify end
     
-    if(length(zerows)>=(n-1)){ # dataw wird sonst zum vector und weitere Variablen auszuschließen ist unsinnig.
+    if(length(zerows)>=(n/2)){
       break
     }
     dataw <- as.data.frame(datamc * sqrt(we))
@@ -271,19 +247,24 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
   if (difference > prec){
     warning(paste("Method did not converge. The scaled difference between norms of the coefficient vectors is ", round(difference, digits=4)))
   }
-  
-  P <- spls$loadings
-  W <- spls$W
-  R <- spls$R
+   
+  w <- we
   w[zerows] <- 0 
-  w[setdiff(1:n,zerows)] <- we 
-  wt <- 1:n 
+  #w[setdiff(1:n,zerows)] <- we 
+  #wt <- 1:n
+  wt <- wte
   wt[zerows] <- 0 
-  wt[setdiff(1:length(wt),zerows)] <- wte 
+  #wt[setdiff(1:length(wt),zerows)] <- wte 
+  wy <- wye
   wy[zerows] <- 0 
-  wy[setdiff(1:length(wy),zerows)] <- wye 
-  qs <- ncol(datam)
+  #wy[setdiff(1:length(wy),zerows)] <- wye 
+
+  P <- res.nipls$loadings
+  W <- res.nipls$W
+  R <- res.nipls$R
+  #qs <- ncol(datam)
   Tpls <- scale(datam[,2:qs],center=datac[2:qs],scale=datas[2:qs]) %*% R 
+  
   if (usesvd == TRUE & dimensions == 1) {
     b <- ressvd$u %*% b 
     rownames(b) <- cX[-1]
@@ -341,8 +322,8 @@ function (formula, data, a, fun="Hampel", probp1 = .95, hampelp2 = .975, hampelp
   inputs <- list(formula=formula, a=a,fun=fun,constants=cutoff,X0=X0,Xs=Xs,y0=y0,ys=ys,center=center,scale=scale, usesvd=usesvd)
   attr(b,"Call") <- c("PRM Regression", paste(a, "component(s)"), fun, constants, paste(center,"centering"), paste(scale,"scaling"))
   attr(coef,"Call") <- c("PRM Regression", paste(a, "component(s)"), fun, constants)
-  output <- list(coefficients = coef, intercept = intercept, wy = wy, wt = wt, w = w, scores = Tpls, weighting.vectors=W,
-                 loadings = P, fitted.values = yfit, residuals=resid, coefficients.scaled=b, intercept.scaled=b0, YMeans = datac[1], XMeans = datac[2:qs], Xscales=datas[2:qs], Yscales = datas[1], Yvar = as.vector(spls$Yev), Xvar=as.vector(spls$Xev),inputs=inputs)
+  output <- list(coefficients = coef, intercept = intercept, wy = wy, wt = wt, w = w, scores = Tpls, R=R, #weighting.vectors=W,
+                 loadings = P,  fitted.values = yfit, residuals=resid, coefficients.scaled=b, intercept.scaled=b0, YMeans = datac[1], XMeans = datac[2:qs], Xscales=datas[2:qs], Yscales = datas[1], Yvar = as.vector(res.nipls$Yev), Xvar=as.vector(res.nipls$Xev),inputs=inputs)
   
   class(output) <- "prm"
   return(output)

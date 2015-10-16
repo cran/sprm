@@ -17,15 +17,20 @@ function(formula, data, as, etas, nfold=10, fun="Hampel", probp1 = .95, hampelp2
   if(is.data.frame(data) | is.list(data)){
     mt <- terms(formula, data=data)
     yname <- dimnames(attr(mt,"factors"))[[1]][1]
+    if(is.list(data)){
+      datnames <- names(data)
+    } else {
+      datnames <- colnames(data)
+    }
     ic <- attr(mt, "intercept")
     if (ic==0){
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)], model.matrix(mt, data))},
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]], model.matrix(mt, data))},
                        error=function(err){
                          error <- TRUE
                          return(error)
                        }) 
-    } else {
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)], model.matrix(mt, data)[,-1])},
+    } else{
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]],model.matrix(mt, data)[,-1])},
                        error=function(err){
                          error <- TRUE
                          return(error)
@@ -36,7 +41,7 @@ function(formula, data, as, etas, nfold=10, fun="Hampel", probp1 = .95, hampelp2
     } else {
       colnames(data)[1] <- dimnames(attr(mt,"factors"))[[1]][1]
       data <- as.data.frame(data)
-    }  
+    }    
   } else {
     stop("Wrong data fromat.")
   }

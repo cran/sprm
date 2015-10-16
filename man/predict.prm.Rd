@@ -21,13 +21,13 @@ further arguments. Currently not used.
 }
 }
 \details{
-If \code{newdata} is specified the sprm model is used to predict the fitted values for this data set, otherwise the fitted values of the model are returned.
+If \code{newdata} is specified the prm model is used to predict the fitted values for this data set, otherwise the fitted values of the model are returned.
 }
 \value{
-\code{predict.sprm} returns a vector of the predicted response. 
+\code{predict.prm} returns a vector of the predicted response. 
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 
 
 Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
@@ -53,7 +53,3 @@ dnew <- as.data.frame(replicate(6, U+rnorm(10)))
 ynewp <- predict(mod, newdata=dnew)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

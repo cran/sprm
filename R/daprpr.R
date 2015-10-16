@@ -24,9 +24,9 @@ function(Data,center.type,scale.type){
   Data.scaled <- (Data - matrix(Data.center,nrow=dim(Data)[1],ncol=dim(Data)[2],byrow=TRUE))
   if(!(scale.type=="no")){
     Data.scale <- apply(Data,2,scale.type)
-    if (any((1/Data.scale)>1e19)| any(is.nan(1/Data.scale))){
+    if (any(1/Data.scale>1e19) | any(is.nan(Data.scale))){
       Data.scale <- rep(1,ncol(Data))
-      warning("Routine used scale.type='no' to avoide division by zero.")
+      warning("Routine used scale.type='no' to avoide division by zero or infinity.")
     }
     Data.scaled <- Data.scaled/matrix(Data.scale,nrow=dim(Data)[1],ncol=dim(Data)[2],byrow=TRUE)
   } else {

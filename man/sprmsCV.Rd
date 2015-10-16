@@ -1,7 +1,7 @@
 \name{sprmsCV}
 \alias{sprmsCV}
 \title{
-Cross validation method for sprm models.
+Cross validation method for SPRM regression models.
 }
 \description{
 k-fold cross validation for the selection of the number of components and the sparsity parameter for sparse partial robust M regression.
@@ -19,7 +19,7 @@ an object of class formula.
 a data frame or list which contains the variables given in formula.
 }
   \item{as}{
-a vector with positive integers, which are the number of PRMS components to be estimated in the models.
+a vector with positive integers, which are the number of SPRM components to be estimated in the models.
 }
   \item{etas}{
 vector of values for the tuning parameter for the sparsity. Values have to between 0 and 1.
@@ -62,22 +62,22 @@ value used for alpha trimmed mean squared error, which is the cross validation c
 \details{
 The \code{alpha} - trimmed mean squared error of the predicted response over all observations is used as robust decision criterion to choose the optimal model.
 
-There may occur combinations of \code{"a"} and \code{"eta"} where the model cannot be estimated. Then the function issues a warning "CV broke off at \code{"a"} and \code{"eta"}". Make sure that this does not happen close to your optimum.
+There may occur combinations of \code{"a"} and \code{"eta"} where the model cannot be estimated. Then the function issues a warning "CV broke off at \code{"a"} and \code{"eta"}".
 
 }
 \value{
-\item{opt.mod}{object of class sprm. (see \code{\link{sprms}})}
+\item{opt.mod}{object of class sprm with the selected parameters. (see \code{\link{sprms}})}
 \item{spe}{array with squared prediction error for each observation and each combination of tuning parameters}
 \item{nzcoef}{array with the number of variables in the model for each cross validation subset and each combination of tuning parameters}
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 }
 \author{
 Irene Hoffmann
 }
 \seealso{
-\code{\link{prms}}, \code{\link{plot.prm}}, \code{\link{predict.prm}}, \code{\link{sprmsCV}}
+\code{\link{sprms}}, \code{\link{plot.sprm}}, \code{\link{predict.sprm}}, \code{\link{prmsCV}}
 }
 \examples{
 set.seed(50235)
@@ -91,6 +91,6 @@ e <- c(rnorm(45,0,1.5),rnorm(5,-20,1))
 y <- X\%*\%beta + e
 d <- as.data.frame(X)
 d$y <- y
-res <- sprmsCV(y~., data=d, as=1:3, etas=seq(0,0.9,0.1), fun="Hampel", prec=0.1)
+res <- sprmsCV(y~., data=d, as=1:2, etas=seq(0,0.9,0.2), nfold=5, fun="Hampel", prec=0.1)
 summary(res$opt.mod)
 }

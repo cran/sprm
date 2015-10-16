@@ -27,7 +27,7 @@ If \code{newdata} is specified the sprm model is used to predict the fitted valu
 \code{predict.sprm} returns a vector of the predicted response. 
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 }
 \author{
 Sven Serneels, BASF Corp and Irene Hoffmann

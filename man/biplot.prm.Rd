@@ -9,7 +9,7 @@ This biplot for prm objects visualizes the original variables which contribute t
 \usage{
 \method{biplot}{prm}(x, comps = c(1, 2), 
 colors = list(scores = "#0000AA", loadings = "red", background = "#BBBBEE"), 
-textsize = 6, arrowshapes = c(25, 0.03), ...)
+textsize = 6, arrowshapes = c(25, 0.03), labelpos=0.35, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +20,7 @@ object of class prm.
 vector with two integers, referring to the components to be plotted.
 }
   \item{colors}{
-list of three elements named \code{scores}, \code{loadings} and \code{background} with color codes or names.
+list of three elements named \code{scores}, \code{loadings} and \code{background} with color codes or names of colors.
 }
   \item{textsize}{
 the text size in which to print the scores and loading names.
@@ -28,12 +28,15 @@ the text size in which to print the scores and loading names.
   \item{arrowshapes}{
 vector of length two containing the angle of the arrowheads and their relative length in npc.
 }
+  \item{labelpos}{
+numeric value; determines distance of the arrow label to the arrowhead.
+}
   \item{...}{
 further arguments. Currently not used.
 }
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 
 Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
 }

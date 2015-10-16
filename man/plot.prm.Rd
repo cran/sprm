@@ -34,7 +34,7 @@ the text size in which to print the scores and loading names. Will be ignored if
 a numeric containing the width of the error bars for \code{type="yyp"}.
 }
   \item{data}{
-optional data frame, containing new cases to predict and plot for \code{type="yyp"}.
+optional data frame, containing new cases to predict and plot for \code{type="yyp"} and \code{type="dd"}.
 }
   \item{yscale}{
 optional scale vector for the yscale in the y vs y predicted plot (e.g. if two different regression plots have to be on the same scale)
@@ -52,10 +52,10 @@ The choices for \code{type} are:
 
 \code{type="coefficients"} - plot of the value of each coefficient estimate with confidence interval.
 
-\code{type="dd"} - distance-distance plot for visualization of leverage points. Robust distances are plotted agains Mahalanobis distances.
+\code{type="dd"} - distance-distance plot for visualization of leverage points. Robust distances are plotted against Mahalanobis distances.
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 
 Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
 }
@@ -76,7 +76,7 @@ d <- as.data.frame(X)
 d$y <- y
 mod <- prms(y~., data=d, a=2, fun="Hampel")
 
-plot(mod, type="yyp", errorbar_width=0.001)
+plot.prm(mod, type="yyp", errorbar_width=0.001)
 plot(mod, type="coefficients", 
 colors = list(bars = "darkgreen", errorbars = "red", background = "lightgray"))
 plot(mod, type="weights")

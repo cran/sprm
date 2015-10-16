@@ -13,15 +13,20 @@ function(formula, data, as, nfold=10, fun="Hampel", probp1 = .95, hampelp2 = .97
   if(is.data.frame(data) | is.list(data)){
     mt <- terms(formula, data=data)
     yname <- dimnames(attr(mt,"factors"))[[1]][1]
+    if(is.list(data)){
+      datnames <- names(data)
+    } else {
+      datnames <- colnames(data)
+    }
     ic <- attr(mt, "intercept")
     if (ic==0){
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)], model.matrix(mt, data))},
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]], model.matrix(mt, data))},
                        error=function(err){
                          error <- TRUE
                          return(error)
                        }) 
     } else{
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)],model.matrix(mt, data)[,-1])},
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]],model.matrix(mt, data)[,-1])},
                        error=function(err){
                          error <- TRUE
                          return(error)
@@ -32,9 +37,9 @@ function(formula, data, as, nfold=10, fun="Hampel", probp1 = .95, hampelp2 = .97
     } else {
       colnames(data)[1] <- dimnames(attr(mt,"factors"))[[1]][1]
       data <- as.data.frame(data)
-    }
+    }    
   } else {
-      stop("Wrong data fromat.")
+    stop("Wrong data fromat.")
   }
 
   n <- dim(data)[1]
@@ -70,23 +75,30 @@ function(formula, data, as, nfold=10, fun="Hampel", probp1 = .95, hampelp2 = .97
       spe[folds$which==f,i] <- (as.vector(predict.prm(trainmod, newdata=dtest)) - dtest[,1])^2
     }
   }
-   
-  mspe <- apply(spe, 2, function(x) mean(sort(x)[1:(length(x)*(1-alpha))]))
   
-  optind <- which.min(mspe)
-  a <- as[optind[1]]
+  mspe <- apply(spe, 2, function(x) mean(sort(x)[1:(length(x)*(1-alpha))]))
+  mrspe <- apply(spe,2, function(x) mean(sqrt(sort(x)[1:(length(x)*(1-alpha))])))
+  
+  optind <- which.min(mspe)[1]  
+
+  a <- as[optind]
   
   prmspFit <- prms(formula=formula,data=data, a=a, fun, probp1,
                     hampelp2, hampelp3,  center, scale, usesvd, numit, prec)
   
   if (plot==TRUE){
-    q75 <- apply(spe, 2, function(x) quantile(x, 3/4))
-    q25 <- apply(spe, 2, function(x) quantile(x, 1/4))
-    plotdat <- data.frame(as=as, mspe=mspe, q25=rep(q25,length(as)), q75=rep(q75,length(as)))
+    
+		q75 <- apply(spe, 2, function(x) quantile(x, 3/4))
+		q25 <- apply(spe, 2, function(x) quantile(x, 1/4))
+		mpe <- mspe
+		ylab <- "squared prediction error"
+	  
+    plotdat <- data.frame(as=as, mspe=mpe, q25=rep(q25,length(as)), q75=rep(q75,length(as)))
     plotmspe <- ggplot(plotdat, aes(x=as, y=mspe)) + geom_line() + geom_point() + 
     geom_point(data=subset(plotdat,as==a), aes(x=as, y=mspe), color="red") +
     geom_errorbar(aes(x=as, ymin=q25, ymax=q75), width=0.5, linetype=2) + 
-    scale_x_continuous(breaks=as)
+    scale_x_continuous(breaks=as)+
+	ylab(ylab)
     print(plotmspe)
   }
   return(list(opt.mod=prmspFit, spe=spe))

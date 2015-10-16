@@ -107,7 +107,7 @@ function(X,y,h,opt="b"){
       rh <- res.pls$weightings[,1]
       dahdy <- dsdy
       drhdy <- dahdy/as.numeric(sqrt(t(ah)%*%S%*%ah))-(ah%*%t(ah)%*%t(X)%*%X%*%dahdy)/as.numeric(sqrt(t(ah)%*%S%*%ah)^3)
-      if(opt=="y"){dthdX <- X%*%drhdy} # {dthdX <- X%*%drhdX} : no visible binding for global variable ‘drhdX’
+      if(opt=="y"){dthdX <- X%*%drhdy}
       dphdy <- S%*%drhdy
       dvhdy <- dphdy
       if(opt=="y"){

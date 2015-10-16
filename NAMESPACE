@@ -1,6 +1,38 @@
-export(sprms, prms, predict.sprm, predict.prm, plot.sprm, plot.prm, biplot.sprm, biplot.prm, sprmsCV, prmsCV, summary.sprm, summary.prm, print.sprm, print.prm)
+export(sprms, prms, sprmda, prmda, predict.sprm, 
+predict.prm, predict.sprmda, predict.prmda, 
+plot.sprm, plot.prm, biplot.sprm, biplot.prm, biplot.sprmda, biplot.prmda, 
+sprmsCV, prmsCV, sprmdaCV, prmdaCV, 
+summary.sprm, summary.prm, summary.sprmda, summary.prmda, 
+print.sprm, print.prm, print.sprmda, print.prmda)
 import(ggplot2, grid)
 importFrom(cvTools, cvFolds)
 importFrom(reshape2, melt)
 importFrom(pcaPP, qn)
 importFrom(pcaPP, l1median)
+importFrom(robustbase,covMcd)
+
+importFrom("grDevices", "colorRampPalette", "dev.off", "pdf")
+importFrom("graphics", "abline", "plot")
+importFrom("stats", "coef", "coefficients", "cov", "fitted",
+           "mahalanobis", "median", "model.matrix", "prcomp",
+           "predict", "qchisq", "qnorm", "qt", "quantile", "runif",
+           "sd", "terms", "var")
+
+S3method(predict, sprm)
+S3method(predict, prm)
+S3method(predict, sprmda)
+S3method(predict, prmda)
+S3method(summary, sprm)
+S3method(summary, prm)
+S3method(summary, sprmda)
+S3method(summary, prmda)
+S3method(print, sprm)
+S3method(print, prm)
+S3method(print, sprmda)
+S3method(print, prmda)
+S3method(biplot, sprm)
+S3method(biplot, prm)
+S3method(biplot, sprmda)
+S3method(biplot, prmda)
+S3method(plot, sprm)
+S3method(plot, prm)

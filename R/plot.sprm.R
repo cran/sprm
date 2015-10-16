@@ -36,6 +36,25 @@ function(x,type="yyp",alpha=.025,colors=list(bars="#0000AA",errorbars="red",back
     print(ggplot(plotweights,aes(nam,caseweights)) + geom_bar(stat="identity",size=3,fill=colors$bars) + labs(title=paste(names(x$YMeans),"Sparse PRM Case Weights Plot")) +
             theme(panel.background=element_rect(fill=colors$background),plot.title=element_text(size=rel(1.5),face="bold"),axis.text.x=element_text(angle=-90)))
   } else if (type=="dd") {
+    if (!missing(data)){
+      Xnames <- names(x$XMeans) #
+      Xindex <- which(colnames(data)%in%Xnames) #
+      if (length(Xindex)!=length(Xnames)){
+        stop("Column names of data don't match variable names in the model.")
+      }
+      Xn <- scale(data[,Xindex], center=x$XMeans, scale=x$Xscales)
+      if (length(rownames(data))==0){
+        rownames(Xn) <- 1:dim(Xn)[1]
+      } else{
+        rownames(Xn) <- rownames(data) 
+      }
+      newscores <- Xn %*% x$R 
+      plotscores <- rbind(as.matrix(x$scores[,1:optcomp]), as.matrix(newscores))
+      Xscaled <- rbind(x$inputs$Xs, Xn)
+    } else {
+      plotscores <- as.matrix(x$scores[,1:optcomp])
+      Xscaled <- x$inputs$Xs
+    }
     plotscores <- as.matrix(x$scores[,1:optcomp])
     T2sprms <- diag((scale(plotscores,center=TRUE,scale=FALSE))%*%solve(cov(plotscores))%*%t(scale(plotscores,center=TRUE,scale=FALSE)))
     n <- length(T2sprms)

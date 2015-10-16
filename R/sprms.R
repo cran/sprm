@@ -42,14 +42,19 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
     mt <- terms(formula, data=data)
     yname <- dimnames(attr(mt,"factors"))[[1]][1]
     ic <- attr(mt, "intercept")
-    if (ic==0){
-    data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)], model.matrix(mt, data))},
-                     error=function(err){
-                       error <- TRUE
-                       return(error)
-                     }) 
+    if(is.list(data)){
+      datnames <- names(data)
     } else {
-      data <- tryCatch({data <- cbind(data[,which(colnames(data)==yname)], model.matrix(mt, data)[,-1])},
+      datnames <- colnames(data)
+    }
+    if (ic==0){
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]], model.matrix(mt, data))},
+                       error=function(err){
+                         error <- TRUE
+                         return(error)
+                       }) 
+    } else{
+      data <- tryCatch({data <- cbind(data[[which(datnames==yname)]],model.matrix(mt, data)[,-1])},
                        error=function(err){
                          error <- TRUE
                          return(error)
@@ -111,60 +116,49 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
   qs <- ncol(datamc)
   ps <- qs - 1
   zerows <- vector(length=0)
-
-  pcx <- prcomp(datamc[,2:qs])
-  spc <- pcx$sdev^2
-  spc <- spc/sum(spc)
-  relcomp <- which(spc - brokenstick(min(qs-1,ns)) <=0)[1]-1
-  if(relcomp==0){relcomp <- 1}
-  wx <- sqrt(apply(daprpr(as.matrix(pcx$x[,1:relcomp]))^2,1,sum))
+  wx <- sqrt(apply(datamc[,2:qs]^2, 1, sum))
   wx <- wx/median(wx)
   wy <- abs(datamc[,1])
-  
-  probct <- qnorm(probp1)
-  ###PF start modify### 
-  ### wy <- wy/(1.4826*median(wy))
-  if (length(wy)/2>sum(wy==0)){ # not too many zeros
+  if (length(wy)/2>sum(wy==0)){
     wy <- wy/(1.4826*median(wy))
   } else{
     wy <- wy/(1.4826*median(wy[wy!=0]))
   }
-  ###PF end modify### 
-  if(fun=="Fair"){
-    wx <- 1/((1 + abs(wx/(qchisq(probp1,relcomp)*2)))^2) # mod: wx/(probct*2) statt wx/probct*2
-    wy <- 1/((1 + abs(wy/(probct*2)))^2)
+
+  probct <- qnorm(probp1)
+  if (fun == "Fair") {
+    wx <- 1/(1 + abs(wx/(probct * 2)))
+    wy <- 1/(1 + abs(wy/(probct * 2)))
   }
-  if(fun =="Huber") {
-    wx[which(wx <= qchisq(probp1,relcomp))] <- 1
-    wx[which(wx > qchisq(probp1,relcomp))] <- qchisq(probp1,relcomp)/abs(wx[which(wx > qchisq(probp1,relcomp))]) #^2 # mod: probct/abs(wx[which(wx > probct)]) statt 1/abs(wx[which(wx > probct)])
+  if (fun == "Huber") {
+    wx[which(wx <= probct)] <- 1
+    wx[which(wx > probct)] <- probct/abs(wx[which(wx > probct)])
     wy[which(wy <= probct)] <- 1
-    wy[which(wy > probct)] <- probct/abs(wy[which(wy > probct)])#^2}
+    wy[which(wy > probct)] <- probct/abs(wy[which(wy > probct)])
   }
-  if(fun =="Hampel") {
-    probct <- qchisq(probp1,relcomp)
-    hampelb <- qchisq(hampelp2,relcomp)
-    hampelr <- qchisq(hampelp3,relcomp)
-    wx[which(wx <= probct)] <- 1 
-    wx[which(wx > probct & wx <= hampelb)] <- probct/abs(wx[which(wx > probct & wx <= hampelb)])
-    wx[which(wx > hampelb & wx <= hampelr)] <- probct*(hampelr-abs(wx[which(wx > hampelb & wx <= hampelr)]))/(hampelr -hampelb)*1/abs(wx[which(wx > hampelb & wx <= hampelr)])
-    wx[which(wx > hampelr)] <- 0
-    probct <- qnorm(probp1)
+  if (fun == "Hampel") {
     hampelb <- qnorm(hampelp2)
     hampelr <- qnorm(hampelp3)
-    wy[which(wy <= probct)] <- 1 
-    wy[which(wy > probct & wy <= hampelb)] <- probct/abs(wy[which(wy > probct & wy <= hampelb)])
-    wy[which(wy > hampelb & wy <= hampelr)] <- probct*(hampelr-abs(wy[which(wy > hampelb & wy <= hampelr)]))/(hampelr -hampelb)*1/abs(wy[which(wy > hampelb & wy <= hampelr)])
+    wx[which(wx <= probct)] <- 1
+    wx[which(wx > probct & wx <= hampelb)] <- probct/abs(wx[which(wx > 
+                                                                    probct & wx <= hampelb)])
+    wx[which(wx > hampelb & wx <= hampelr)] <- probct * (hampelr - 
+                                                           abs(wx[which(wx > hampelb & wx <= hampelr)]))/(hampelr - 
+                                                                                                            hampelb) * 1/abs(wx[which(wx > hampelb & wx <= hampelr)])
+    wx[which(wx > hampelr)] <- 0
+    wy[which(wy <= probct)] <- 1
+    wy[which(wy > probct & wy <= hampelb)] <- probct/abs(wy[which(wy > 
+                                                                    probct & wy <= hampelb)])
+    wy[which(wy > hampelb & wy <= hampelr)] <- probct * (hampelr - 
+                                                           abs(wy[which(wy > hampelb & wy <= hampelr)]))/(hampelr - 
+                                                                                                            hampelb) * 1/abs(wy[which(wy > hampelb & wy <= hampelr)])
     wy[which(wy > hampelr)] <- 0
-  }                                                                                                                
-  
+  }
   w <- wx * wy
-  if(any(w<1e-6)){
-    w0 <- which(w<1e-6)
-    datamc <- datamc[-w0,]
-    wxe <- wx[-w0]
-    wye <- wy[-w0]
-    we <- w[-w0]
-    zerows <- as.numeric(names(w0))
+  if (any(w < 1e-06)) {
+    w0 <- which(w < 1e-06)
+    w <- replace(w, list = w0, values = 1e-06)
+    we <- w
   } else {
     wxe <- wx
     wye <- wy
@@ -174,34 +168,17 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
   loops <- 1
   rold <- 10^-5
   difference <- 1
-  while ((difference > prec) && (loops < numit)) {
-    #   res <- tryCatch({     
-    res.snipls <- snipls(formula,data=dataw,eta,a,print=FALSE)
-    #    }, error=function(err){
-    #      error <- TRUE
-    #      return(error)
-    #    })  
-    #    if (is.logical(res)){
-    #       break
-    #    } else{
-    #      res.snipls <- res
-    #    }
-    
-    Tpls <- res.snipls$scores/sqrt(as.numeric(we))
+  while ((difference > prec) && (loops < numit)) {     
+    res.snipls <- snipls(data=dataw,eta,a,print=FALSE)
+    Tpls <- res.snipls$scores/sqrt(we)
     b <- coef(res.snipls)
     yp <- fitted(res.snipls)
     r <- datamc[,1] - yp
-    rc <- r - median(r)
-    
-    ###PF start modify### 
-    ###r <- abs(rc)/(1.4826*median(abs(rc))) 
-    if (length(rc)/2>sum(rc==0)){ # not too many zeros
-      r <- abs(rc)/(1.4826*median(abs(rc))) 
+    if (length(r)/2>sum(r==0)){ 
+      r <- abs(r)/(1.4826*median(abs(r))) 
+    } else{
+      r <- abs(r)/(1.4826*median(abs(r[r!=0])))
     }
-    else{
-      r <- abs(rc)/(1.4826*median(abs(rc[rc!=0])))
-    }
-    ###PF end modify### 
     
     scalet <- scale
     if(scale=="no"){scalet <- "qn"}
@@ -249,14 +226,19 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
     rold <- sum(b^2)
     we <- wye * wte
     if(any(we<1e-6)){
-      w0 <- which(we<1e-6)
-      datamc <- datamc[-w0,]
-      wte <- wte[-w0]
-      wye <- wye[-w0]
-      we <- we[-w0]
-      zerows <- unique(c(zerows,as.numeric(names(w0)))) # 
+		w0 <- which(we<1e-6)
+		we <- replace(we,list=w0,values=1e-6)
+#      w0 <- which(we<1e-6)
+#      datamc <- datamc[-w0,]
+#      wte <- wte[-w0]
+#      wye <- wye[-w0]
+#      we <- we[-w0]
+      zerows <- unique(c(zerows,as.numeric(names(w0))))
     }
-    
+	if(length(zerows)>=(n/2)){
+		break
+	}
+	
     dataw <- as.data.frame(datamc * sqrt(we))
     loops <- loops + 1
   }
@@ -265,13 +247,21 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
     warning(paste("Method did not converge. The scaled difference between norms of the coefficient vectors is ", round(difference, digits=4)))
   }
   
+plotprec <- FALSE
+if(plotprec==TRUE){
+  print(loops-1)
+}
+
+  w <- we
   w[zerows] <- 0 
-  w[setdiff(1:length(w),zerows)] <- we
-  wt <- 1:n 
+  #  w[setdiff(1:length(w),zerows)] <- we
+  #  wt <- 1:n
+  wt <- wte
   wt[zerows] <- 0 
-  wt[setdiff(1:length(wt),zerows)] <- wte
+  # wt[setdiff(1:length(wt),zerows)] <- wte
+  wy <- wye
   wy[zerows] <- 0 
-  wy[setdiff(1:length(wy),zerows)] <- wye
+  # wy[setdiff(1:length(wy),zerows)] <- wye
   
   
   P <- res.snipls$loadings
@@ -285,8 +275,9 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
   
   X0 <- data[,2:q]
   Xs <- daprpr(X0,center,scale)
-  
-  coef <- datas[1]/datas[2:q]*b
+  Xss <- attr(Xs, "Scale")
+  coef <- datas[1]/Xss*b
+
   if(center=="mean"){
     intercept <- mean(data[,1] - data[,2:q]%*%coef)
   } else {
@@ -333,8 +324,8 @@ function (formula, data, a, eta, fun="Hampel", probp1 = .95, hampelp2 = .975, ha
   inputs <- list(formula=formula, a=a,eta=eta,fun=fun,constants =cutoff,X0=X0, Xs=Xs, ys=ys, y0=y0, center=center,scale=scale)
   attr(coef,"Call") <- c("Sparse PRM Regression", paste(a, "component(s)"), paste("eta = ",eta), fun, constants)
   attr(b,"Call") <- c("Sparse PRM Regression", paste(a, "component(s)"), paste("eta = ",eta), fun, constants, paste(center,"centering"), paste(scale,"scaling"))
-  output <- list(coefficients = coef, intercept = intercept, wy = wy, wt = wt, w = w, scores = Tpls, weighting.vectors=W,
-                 loadings = P, fitted.values = yfit, residuals = resid, coefficients.scaled=b, intercept.scaled=b0, YMeans = datac[1], XMeans = datac[2:qs], 
+  output <- list(coefficients = coef, intercept = intercept, wy = wy, wt = wt, w = w, scores = Tpls, R=R,# weighting.vectors=W,
+                 loadings = P,  fitted.values = yfit, residuals = resid, coefficients.scaled=b, intercept.scaled=b0, YMeans = datac[1], XMeans = datac[2:qs], 
                  Yscales = datas[1], Xscales = datas[2:q], Yvar = as.vector(res.snipls$Yev), Xvar=as.vector(res.snipls$Xev), inputs=inputs, used.vars=res.snipls$Vars)
   class(output) <- "sprm"
   return(output)

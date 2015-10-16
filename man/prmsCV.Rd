@@ -1,7 +1,7 @@
 \name{prmsCV}
 \alias{prmsCV}
 \title{
-Cross validation method for prm models.
+Cross validation method for PRM regression models.
 }
 \description{
 k-fold cross validation for the selection of the number of components for partial robust M regression.
@@ -19,7 +19,7 @@ an object of class formula.
 a data frame or list which contains the variables given in formula.
 }
   \item{as}{
-a vector with positive integers, which are the number of PRMS components to be estimated in the models.
+a vector with positive integers, which are the number of PRM components to be estimated in the models.
 }
   \item{nfold}{
 the number of folds used for cross validation, default is \code{nford=10} for 10-fold CV.
@@ -66,7 +66,7 @@ The \code{alpha} - trimmed mean squared error of the predicted response over all
 \item{spe}{matrix with squared prediction error for each observation and each number of components.}
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 
 Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
 }

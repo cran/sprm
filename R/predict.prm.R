@@ -21,8 +21,10 @@ function(object, newdata, ...){
       } else{
         Xn <- model.matrix(mt, newdata)[,-1]
       } 
-
     }  
+	if (is.vector(Xn)==TRUE){
+		Xn <- t(as.matrix(Xn))
+	}
     fitted.values <- (as.matrix(Xn)%*%b + object$intercept)[,1]
   }
   return(fitted.values)

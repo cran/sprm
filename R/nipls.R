@@ -1,6 +1,5 @@
 nipls <-
-function(formula,data,a){
-#  Z <- model.frame(formula,data=data)
+function(data,a){
   Z <- data
   Xh <- scale(as.matrix(Z[,2:ncol(Z)]),center=TRUE,scale=FALSE)
   X0 <- Xh
@@ -23,11 +22,11 @@ function(formula,data,a){
     ch <- t(yh)%*%th/(nth^2)
     ph <- t(Xh)%*%th/(nth^2)
     yh <- yh - th * as.numeric(ch) 
+	Xh <- Xh - th%*%t(ph)
     W <- cbind(W,wh)
     P <- cbind(P,ph) 
     C <- rbind(C,ch) 
     Tpls <- cbind(Tpls,th)
-    Xh <- Xh - th%*%t(ph)
     Xev[i] <- (nth^2*norm(ph,"F")^2)/sum(X0^2)*100
     Yev[i] <- sum(nth^2*as.numeric(ch^2))/sum(y0^2)*100
   }

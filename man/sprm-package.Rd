@@ -3,10 +3,10 @@
 \alias{sprm}
 \docType{package}
 \title{
-Sparse and Non-Sparse Partial Robust M Regression
+Sparse and Non-Sparse Partial Robust M Regression and Classification
 }
 \description{
-In this package two methods for dimension reduction and regression analysis are implemented that yield estimates with a partial least squares alike interpretability. Partial robust M regression is robust to both vertical outliers and leverage points. Sparse partial robust M regression is a related robust method with sparse coefficient estimate, and therefore with intrinsic variable selection.
+Robust dimension reduction methods for regression and discriminant analysis are implemented that yield estimates with a partial least squares alike interpretability. Partial robust M regression (PRM) is robust to both vertical outliers and leverage points. Sparse partial robust M regression (SPRM) is a related robust method with sparse coefficient estimate, and therefore with intrinsic variable selection. For bianry classification related discriminant methods are PRM-DA and SPRM-DA.
 }
 \details{
 \tabular{ll}{
@@ -16,20 +16,22 @@ Version: \tab 1.1\cr
 Date: \tab 2014-12-10 \cr
 License: \tab GPL(>=3)\cr
 }
-The main functions in this package are \code{prms} and \code{sprms} for non-spares and sparse partial robust M regression, respectively. Further cross validation procedures for tuning parameter selection are implemented in \code{prmsCV} and \code{sprmsCV}. Various plot options are available to visualize the results.
+The main functions in this package are \code{prms} and \code{sprms} for non-spares and sparse partial robust M regression, respectively, and \code{prmda} and \code{sprmda} for non-spares and sparse partial robust M discriminant analysis. Further cross validation procedures for tuning parameter selection are implemented in \code{prmsCV}, \code{sprmsCV}, \code{prmdaCV} and \code{sprmdaCV}. Various plot options are available to visualize the results.
 }
 \author{
 Sven Serneels, BASF Corp and Irene Hoffmann
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
+
+Hoffmann, I., Filzmoser, P., Serneels, S., Varmuza, K., Sparse and robust PLS for binary classification.
 
 Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
 }
 
 \keyword{ package }
 \seealso{
-\code{\link{prms}}, \code{\link{sprms}}
+\code{\link{prms}}, \code{\link{sprms}},  \code{\link{prmda}},  \code{\link{sprmda}}
 }
 \examples{
 set.seed(50235)

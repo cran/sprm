@@ -24,7 +24,7 @@ intervals.prm <- function(x,data, optcomp, n, df, sigma2, covb, alpha){
   }
   mT <- apply(x$scores,2,median)
   sT <- apply(x$scores,2,qn)
-  Tn <- Xn%*%x$weighting.vectors[,]
+  Tn <- Xn%*%x$R[,]
   dt <- scale(Tn,center=mT,scale=sT)
   wtn <- sqrt(apply(dt^2, 1, sum))
   wtn <- wtn/median(wtn)

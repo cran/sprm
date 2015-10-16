@@ -24,6 +24,9 @@ function(object,newdata, ...){
         Xn <- model.matrix(mt, newdata)[,-1]
       } 
     }  
+	if (is.vector(Xn)==TRUE){
+		Xn <- t(as.matrix(Xn))
+	}
     fitted.values <- as.vector(as.matrix(Xn)%*%b + object$intercept)
   }
   return(fitted.values)

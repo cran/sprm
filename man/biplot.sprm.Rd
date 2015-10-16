@@ -10,7 +10,7 @@ This biplot for sprm objects visualizes the original variables which contribute 
 \usage{
 \method{biplot}{sprm}(x, comps = c(1, 2), 
 colors = list(scores = "#0000AA", loadings = "red", background = "#BBBBEE"), 
-textsize = 6, arrowshapes = c(25, 0.03), ...)
+textsize = 6, arrowshapes = c(25, 0.03), labelpos=0.35, ...)
 }
 \arguments{
   \item{x}{
@@ -20,7 +20,7 @@ object of class sprm.
 vector with two integers, referring to the components to be plotted.
 }
   \item{colors}{
-list of three elements named \code{scores}, \code{loadings} and \code{background} with color codes or names.
+list of three elements named \code{scores}, \code{loadings} and \code{background} with color codes or names of colors.
 }
   \item{textsize}{
 the text size in which to print the scores and loading names.
@@ -28,15 +28,18 @@ the text size in which to print the scores and loading names.
   \item{arrowshapes}{
 vector of length two containing the angle of the arrowheads and their relative length in npc.
 }
+  \item{labelpos}{
+numeric value; determines distance of the arrow label to the arrowhead.
+}
   \item{...}{
 further arguments. Currently not used.
 }
 }
 \details{
-The sparsity of the biplot is inherited by the sparsity of the model. Only the contributing variables are included in the plot, which leads to better visualization and easier interpretation.
+The sparsity of the biplot is inherited by the sparsity of the model. Only the contributing variables are included in the plot, which can lead to better visualization and easier interpretation.
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 }
 \author{
 Sven Serneels, BASF Corp.

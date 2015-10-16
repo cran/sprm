@@ -1,5 +1,5 @@
 biplot.prm <-
-function(x,comps=c(1,2),colors=list(scores="#0000AA",loadings="red",background="#BBBBEE"),textsize=6,arrowshapes=c(25,.03), ...)
+function(x,comps=c(1,2),colors=list(scores="#0000AA",loadings="red",background="#BBBBEE"),textsize=6,arrowshapes=c(25,.03), labelpos=0.35, ...)
   
   # biplot.prm automatically generates Sparse Partial Robust M regression Biplots
   # inputs : x, a "prm" class PRM regression object 
@@ -33,8 +33,8 @@ function(x,comps=c(1,2),colors=list(scores="#0000AA",loadings="red",background="
   plotloadings[,2] <- plotloadings[,2]*plotscalingfactors[2]
   npl <- nrow(plotloadings)
   plotloadings$V3 <- rep(0,npl)
-  plotloadings$V4 <- plotloadings$V1+sign(plotloadings$V1)*.35
-  plotloadings$V5 <- plotloadings$V2+sign(plotloadings$V2)*.35
+  plotloadings$V4 <- plotloadings$V1+sign(plotloadings$V1)* labelpos
+  plotloadings$V5 <- plotloadings$V2+sign(plotloadings$V2)* labelpos
   localenv <- environment()
   plotty <- ggplot(environment=localenv)
   plotty <- plotty + geom_text(data=plotscores, aes_string(x=colnames(plotscores)[1],y=colnames(plotscores)[2]), size=textsize,label=rownames(plotscores),color=colors$scores) 
@@ -44,5 +44,3 @@ function(x,comps=c(1,2),colors=list(scores="#0000AA",loadings="red",background="
   plotty <- plotty + theme(panel.background=element_rect(fill=colors$background),plot.title=element_text(size=rel(1.5),face="bold"))
   print(plotty)
 }
-## Version RPackage04 
-## V1 <- V2 <- V3 <- V4 <- V5 <- NULL wegen biplot.sprm: no visible binding for global variable ‘V1’

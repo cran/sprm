@@ -69,7 +69,8 @@ Functions \code{summary}, \code{predict} and \code{plot} are available. Also the
 \item{wt}{the case weights in the score space.}
 \item{w}{the overall case weights used for weighted regression (depending on the weight function). \code{w=wy*wt}.}
 \item{scores}{the matrix of scores.}
-\item{weighting.vectors}{the matrix to transform data to scorse.}
+%\item{weighting.vectors}{the matrix to transform data to scorse.}
+\item{R}{Direction vectors (or weighting vectors or rotation matrix) to obtain the scores. \code{scores=Xs\%*\%R}.}
 \item{loadings}{the matrix of loadings.}
 \item{fitted.values}{the vector of estimated response values.}
 \item{residuals}{vector of residuals, true response minus estimated response.}
@@ -85,7 +86,7 @@ Functions \code{summary}, \code{predict} and \code{plot} are available. Also the
 \item{used.vars}{Indices of variables included in the model.}
 }
 \references{
-Sven Serneels et al. (2014) Sparse partial robust M regression
+Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 }
 \author{
 Sven Serneels, BASF Corp and Irene Hoffmann
