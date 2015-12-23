@@ -22,11 +22,12 @@ The main functions in this package are \code{prms} and \code{sprms} for non-spar
 Sven Serneels, BASF Corp and Irene Hoffmann
 }
 \references{
-Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
 
-Hoffmann, I., Filzmoser, P., Serneels, S., Varmuza, K., Sparse and robust PLS for binary classification.
+Hoffmann, I., Filzmoser, P., Serneels, S., Varmuza, K., Sparse and robust PLS for binary classification. Journal of Chemometrics, In print.
 
-Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
+Hoffmann, I., Serneels, S., Filzmoser, P., Croux, C. (2015). Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems, 149, 50-59.
+
+Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J. (2005). Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79, 55-64.
 }
 
 \keyword{ package }
@@ -48,6 +49,4 @@ d$y <- y
 mod <- prms(y~., data=d, a=2, fun="Hampel")
 smod <- sprms(y~., data=d, a=2, eta=0.5, fun="Hampel")
 
-biplot(mod)
-biplot(smod)
 }

@@ -1,10 +1,10 @@
 export(sprms, prms, sprmda, prmda, predict.sprm, 
 predict.prm, predict.sprmda, predict.prmda, 
-plot.sprm, plot.prm, biplot.sprm, biplot.prm, biplot.sprmda, biplot.prmda, 
+plot.sprm, plot.prm, 
 sprmsCV, prmsCV, sprmdaCV, prmdaCV, 
 summary.sprm, summary.prm, summary.sprmda, summary.prmda, 
 print.sprm, print.prm, print.sprmda, print.prmda)
-import(ggplot2, grid)
+import(ggplot2)
 importFrom(cvTools, cvFolds)
 importFrom(reshape2, melt)
 importFrom(pcaPP, qn)
@@ -18,6 +18,9 @@ importFrom("stats", "coef", "coefficients", "cov", "fitted",
            "predict", "qchisq", "qnorm", "qt", "quantile", "runif",
            "sd", "terms", "var")
 
+importFrom("grid", "grid.newpage", "pushViewport", "viewport", 
+            "grid.layout")
+
 S3method(predict, sprm)
 S3method(predict, prm)
 S3method(predict, sprmda)
@@ -30,9 +33,5 @@ S3method(print, sprm)
 S3method(print, prm)
 S3method(print, sprmda)
 S3method(print, prmda)
-S3method(biplot, sprm)
-S3method(biplot, prm)
-S3method(biplot, sprmda)
-S3method(biplot, prmda)
 S3method(plot, sprm)
 S3method(plot, prm)

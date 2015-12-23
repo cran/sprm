@@ -214,7 +214,7 @@ prmda <-
     }
     
     if (difference > prec){
-      warning(paste("Method did not converge. The scaled difference between norms of the coefficient vectors is ", round(difference, digits=4)))
+      warning(paste("Method did not converge. The scaled difference between norms of case weights is ", round(difference, digits=4)))
     }
     
     w <- wlist$we

@@ -55,15 +55,15 @@ The choices for \code{type} are:
 \code{type="dd"} - distance-distance plot for visualization of leverage points. Robust distances are plotted against Mahalanobis distances.
 }
 \references{
-Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
+Hoffmann, I., Serneels, S., Filzmoser, P., Croux, C. (2015). Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems, 149, 50-59.
 
-Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J., Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79 (2005), 55-64.
+Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J. (2005). Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79, 55-64.
 }
 \author{
 Sven Serneels, BASF Corp.
 }
 \seealso{
-\code{\link{prms}}, \code{\link{biplot.prm}}
+\code{\link{prms}}
 }
 \examples{
 set.seed(5023)

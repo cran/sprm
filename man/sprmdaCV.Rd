@@ -96,7 +96,7 @@ Irene Hoffmann
 
 
 \seealso{
-\code{\link{sprmda}}, \code{\link{biplot.sprmda}}, \code{\link{predict.sprmda}}, \code{\link{prmdaCV}}
+\code{\link{sprmda}}, \code{\link{predict.sprmda}}, \code{\link{prmdaCV}}
 }
 \examples{
 data(iris)
@@ -104,7 +104,6 @@ data <- droplevels(subset(iris,iris$Species!="setosa"))
 ## for demonstration with only two values in etas
 smod <- sprmdaCV(Species~.,data, as=2:3, etas=c(0.1,0.9), nfold=5, 
                  class="lda", numit=10, prec=0.1)
-biplot(smod$opt.mod)
 \dontrun{
 ## in practis a finer grid of as and etas should be searched 
 ## at the expence of computation time

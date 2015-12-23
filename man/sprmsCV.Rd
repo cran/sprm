@@ -71,7 +71,9 @@ There may occur combinations of \code{"a"} and \code{"eta"} where the model cann
 \item{nzcoef}{array with the number of variables in the model for each cross validation subset and each combination of tuning parameters}
 }
 \references{
-Hoffmann, I., Serneels, S.,  Filzmoser, P. Croux, C., Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems. In print.
+Hoffmann, I., Serneels, S., Filzmoser, P., Croux, C. (2015). Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems, 149, 50-59.
+
+Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J. (2005). Partial Robust M-Regression. Chemometrics and Intelligent Laboratory Systems, 79, 55-64.
 }
 \author{
 Irene Hoffmann
