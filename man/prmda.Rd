@@ -74,7 +74,7 @@ For \code{class="lda"} a robust LDA model is estimated in the PRM score space fo
 \value{
 prmda returns an object of class prmda.
 
-Functions \code{summary} and \code{predict} are available. Also the generic functions \code{coefficients}, \code{fitted.values} and \code{residuals} can be used to extract the corresponding elements from the sprmda object.
+Functions \code{summary}, \code{predict} and \code{biplot} are available. Also the generic functions \code{coefficients}, \code{fitted.values} and \code{residuals} can be used to extract the corresponding elements from the sprmda object.
 
 \item{scores}{the matrix of scores.}
 %\item{weighting.vectors}{the matrix to transform data to scorse.}

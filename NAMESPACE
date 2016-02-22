@@ -1,6 +1,7 @@
 export(sprms, prms, sprmda, prmda, predict.sprm, 
 predict.prm, predict.sprmda, predict.prmda, 
 plot.sprm, plot.prm, 
+biplot.sprm, biplot.prm, biplot.sprmda, biplot.prmda,
 sprmsCV, prmsCV, sprmdaCV, prmdaCV, 
 summary.sprm, summary.prm, summary.sprmda, summary.prmda, 
 print.sprm, print.prm, print.sprmda, print.prmda)
@@ -33,5 +34,9 @@ S3method(print, sprm)
 S3method(print, prm)
 S3method(print, sprmda)
 S3method(print, prmda)
+S3method(biplot, sprm)
+S3method(biplot, prm)
+S3method(biplot, sprmda)
+S3method(biplot, prmda)
 S3method(plot, sprm)
 S3method(plot, prm)

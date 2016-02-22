@@ -23,7 +23,7 @@ Sven Serneels, BASF Corp and Irene Hoffmann
 }
 \references{
 
-Hoffmann, I., Filzmoser, P., Serneels, S., Varmuza, K., Sparse and robust PLS for binary classification. Journal of Chemometrics, In print.
+Hoffmann, I., Filzmoser, P., Serneels, S., Varmuza, K., Sparse and robust PLS for binary classification. In print.
 
 Hoffmann, I., Serneels, S., Filzmoser, P., Croux, C. (2015). Sparse partial robust M regression. Chemometrics and Intelligent Laboratory Systems, 149, 50-59.
 
@@ -49,4 +49,6 @@ d$y <- y
 mod <- prms(y~., data=d, a=2, fun="Hampel")
 smod <- sprms(y~., data=d, a=2, eta=0.5, fun="Hampel")
 
+biplot(mod)
+biplot(smod)
 }

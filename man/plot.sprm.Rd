@@ -63,7 +63,7 @@ Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J. (2005). Partial Robust M
 Sven Serneels, BASF Corp.
 }
 \seealso{
-\code{\link{sprm}}
+\code{\link{sprm}}, \code{\link{biplot.sprm}}
 }
 \examples{
 set.seed(5023)

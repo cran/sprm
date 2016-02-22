@@ -90,7 +90,7 @@ Serneels, S., Croux, C., Filzmoser, P., Van Espen, P.J. (2005). Partial Robust M
 Sven Serneels, BASF Corp and Irene Hoffmann
 }
 \seealso{
-\code{\link{prmsCV}}, \code{\link{plot.prm}}, \code{\link{predict.prm}}, \code{\link{sprms}}
+\code{\link{prmsCV}}, \code{\link{plot.prm}}, \code{\link{biplot.prm}}, \code{\link{predict.prm}}, \code{\link{sprms}}
 }
 \examples{
 set.seed(5023)
